@@ -5,17 +5,12 @@ import { supabase } from '../lib/supabase'
 import { CATEGORIES } from '../lib/types'
 import type { Skill, SkillCategory, SortOption } from '../lib/types'
 import SkillCard from '../components/SkillCard'
+import { useLang } from '../context/LangContext'
 
 const PAGE_SIZE = 12
 
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: 'newest', label: 'Newest' },
-  { value: 'most-stars', label: 'Most Stars' },
-  { value: 'most-downloads', label: 'Most Downloads' },
-  { value: 'highest-rated', label: 'Highest Rated' },
-]
-
 export default function Explore() {
+  const { t } = useLang()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const initialSearch = searchParams.get('q') ?? ''
@@ -124,7 +119,7 @@ export default function Explore() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <h1 className="text-2xl font-bold text-[#e6edf3] mb-6">
-        Explore Skills
+        {t('explore.title')}
       </h1>
 
       {/* Search + Sort Row */}
@@ -135,7 +130,7 @@ export default function Explore() {
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search skills..."
+            placeholder={t('explore.search')}
             className="w-full bg-[#0d1117] border border-[#30363d] rounded-md py-2 pl-10 pr-3 text-sm text-[#e6edf3] placeholder-[#484f58] focus:outline-none focus:border-[#238636] focus:ring-1 focus:ring-[#238636]"
           />
         </div>
@@ -146,11 +141,10 @@ export default function Explore() {
             onChange={(e) => setSort(e.target.value as SortOption)}
             className="appearance-none bg-[#0d1117] border border-[#30363d] rounded-md py-2 pl-10 pr-8 text-sm text-[#e6edf3] focus:outline-none focus:border-[#238636] focus:ring-1 focus:ring-[#238636] cursor-pointer"
           >
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
+            <option value="newest">{t('explore.newest')}</option>
+              <option value="most-stars">{t('explore.most_stars')}</option>
+              <option value="most-downloads">{t('explore.most_downloads')}</option>
+              <option value="highest-rated">{t('explore.highest_rated')}</option>
           </select>
         </div>
       </div>
@@ -165,7 +159,7 @@ export default function Explore() {
               : 'bg-[#161b22] border-[#30363d] text-[#8b949e] hover:text-[#e6edf3] hover:border-[#8b949e]'
           }`}
         >
-          All
+          {t('explore.all')}
         </button>
         {CATEGORIES.map((cat) => (
           <button
@@ -179,7 +173,7 @@ export default function Explore() {
                 : 'bg-[#161b22] border-[#30363d] text-[#8b949e] hover:text-[#e6edf3] hover:border-[#8b949e]'
             }`}
           >
-            {cat.label}
+            {t('cat.' + cat.value)}
           </button>
         ))}
       </div>
@@ -192,7 +186,7 @@ export default function Explore() {
       ) : skills.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-[#8b949e]">
-            No skills found matching your criteria.
+            {t('explore.no_results')}
           </p>
         </div>
       ) : (
@@ -213,10 +207,10 @@ export default function Explore() {
                 {loadingMore ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Loading...
+                    {t('explore.loading')}
                   </>
                 ) : (
-                  'Load More'
+                  t('explore.load_more')
                 )}
               </button>
             </div>

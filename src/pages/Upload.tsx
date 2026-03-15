@@ -3,12 +3,14 @@ import { useNavigate, Navigate } from 'react-router-dom'
 import { Upload as UploadIcon, AlertCircle, Loader2, X } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
+import { useLang } from '../context/LangContext'
 import { CATEGORIES } from '../lib/types'
 import type { SkillCategory } from '../lib/types'
 
 export default function Upload() {
   const { user, loading: authLoading } = useAuth()
   const navigate = useNavigate()
+  const { t } = useLang()
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -44,15 +46,15 @@ export default function Upload() {
 
     // Validation
     if (!title.trim()) {
-      setError('Title is required.')
+      setError(t('upload.title_required'))
       return
     }
     if (!description.trim()) {
-      setError('Description is required.')
+      setError(t('upload.desc_required'))
       return
     }
     if (!category) {
-      setError('Category is required.')
+      setError(t('upload.category_required'))
       return
     }
 
@@ -123,10 +125,10 @@ export default function Upload() {
         <UploadIcon className="w-8 h-8 text-[#238636]" />
         <div>
           <h1 className="text-2xl font-bold text-[#e6edf3]">
-            Publish a Skill
+            {t('upload.title')}
           </h1>
           <p className="text-sm text-[#8b949e]">
-            Share your work with the team
+            {t('upload.subtitle')}
           </p>
         </div>
       </div>
@@ -148,7 +150,7 @@ export default function Upload() {
             htmlFor="title"
             className="block text-sm font-medium text-[#e6edf3] mb-1.5"
           >
-            Title <span className="text-red-400">*</span>
+            {t('upload.field_title')} <span className="text-red-400">{t('upload.required')}</span>
           </label>
           <input
             id="title"
@@ -166,7 +168,7 @@ export default function Upload() {
             htmlFor="description"
             className="block text-sm font-medium text-[#e6edf3] mb-1.5"
           >
-            Short Description <span className="text-red-400">*</span>
+            {t('upload.field_desc')} <span className="text-red-400">{t('upload.required')}</span>
           </label>
           <input
             id="description"
@@ -184,8 +186,8 @@ export default function Upload() {
             htmlFor="long-description"
             className="block text-sm font-medium text-[#e6edf3] mb-1.5"
           >
-            Documentation{' '}
-            <span className="text-xs text-[#8b949e]">(Markdown supported)</span>
+            {t('upload.field_docs')}{' '}
+            <span className="text-xs text-[#8b949e]">{t('upload.field_docs_hint')}</span>
           </label>
           <textarea
             id="long-description"
@@ -203,7 +205,7 @@ export default function Upload() {
             htmlFor="category"
             className="block text-sm font-medium text-[#e6edf3] mb-1.5"
           >
-            Category <span className="text-red-400">*</span>
+            {t('upload.field_category')} <span className="text-red-400">{t('upload.required')}</span>
           </label>
           <select
             id="category"
@@ -211,10 +213,10 @@ export default function Upload() {
             onChange={(e) => setCategory(e.target.value as SkillCategory)}
             className={inputClasses + ' cursor-pointer'}
           >
-            <option value="">Select a category</option>
+            <option value="">{t('upload.field_category_select')}</option>
             {CATEGORIES.map((cat) => (
               <option key={cat.value} value={cat.value}>
-                {cat.label}
+                {t('cat.' + cat.value)}
               </option>
             ))}
           </select>
@@ -226,8 +228,8 @@ export default function Upload() {
             htmlFor="tags"
             className="block text-sm font-medium text-[#e6edf3] mb-1.5"
           >
-            Tags{' '}
-            <span className="text-xs text-[#8b949e]">(comma separated)</span>
+            {t('upload.field_tags')}{' '}
+            <span className="text-xs text-[#8b949e]">{t('upload.field_tags_hint')}</span>
           </label>
           <input
             id="tags"
@@ -245,7 +247,7 @@ export default function Upload() {
             htmlFor="version"
             className="block text-sm font-medium text-[#e6edf3] mb-1.5"
           >
-            Version
+            {t('upload.field_version')}
           </label>
           <input
             id="version"
@@ -263,8 +265,8 @@ export default function Upload() {
             htmlFor="github-url"
             className="block text-sm font-medium text-[#e6edf3] mb-1.5"
           >
-            GitHub URL{' '}
-            <span className="text-xs text-[#8b949e]">(optional)</span>
+            {t('upload.field_github')}{' '}
+            <span className="text-xs text-[#8b949e]">{t('upload.optional')}</span>
           </label>
           <input
             id="github-url"
@@ -279,8 +281,8 @@ export default function Upload() {
         {/* File Upload */}
         <div>
           <label className="block text-sm font-medium text-[#e6edf3] mb-1.5">
-            File Upload{' '}
-            <span className="text-xs text-[#8b949e]">(optional)</span>
+            {t('upload.field_file')}{' '}
+            <span className="text-xs text-[#8b949e]">{t('upload.optional')}</span>
           </label>
           {file ? (
             <div className="flex items-center gap-2 bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-2">
@@ -313,12 +315,12 @@ export default function Upload() {
           {submitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              Publishing...
+              {t('upload.submitting')}
             </>
           ) : (
             <>
               <UploadIcon className="w-4 h-4" />
-              Publish Skill
+              {t('upload.submit')}
             </>
           )}
         </button>

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
+import { LangProvider } from './context/LangContext'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Explore from './pages/Explore'
@@ -12,6 +13,7 @@ import Register from './pages/Register'
 
 function App() {
   return (
+    <LangProvider>
     <BrowserRouter basename="/vimskillhub">
       <AuthProvider>
         <Toaster
@@ -38,6 +40,7 @@ function App() {
         </Routes>
       </AuthProvider>
     </BrowserRouter>
+    </LangProvider>
   )
 }
 

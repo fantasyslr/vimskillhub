@@ -2,8 +2,10 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Sparkles, Mail, Lock, AlertCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useLang } from '../context/LangContext'
 
 export default function Login() {
+  const { t } = useLang()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -36,8 +38,8 @@ export default function Login() {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#238636] to-[#2ea043] shadow-lg shadow-[#238636]/15 mb-5">
             <Sparkles className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-[#e6edf3]">Welcome back</h1>
-          <p className="text-[#8b949e] mt-2 text-sm">Sign in to VimSkillHub</p>
+          <h1 className="text-2xl font-bold text-[#e6edf3]">{t('login.welcome')}</h1>
+          <p className="text-[#8b949e] mt-2 text-sm">{t('login.subtitle')}</p>
         </div>
 
         <form
@@ -53,7 +55,7 @@ export default function Login() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-[#e6edf3] mb-2">
-              Email address
+              {t('login.email')}
             </label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#484f58]" />
@@ -71,7 +73,7 @@ export default function Login() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-[#e6edf3] mb-2">
-              Password
+              {t('login.password')}
             </label>
             <div className="relative">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#484f58]" />
@@ -92,14 +94,14 @@ export default function Login() {
             disabled={loading}
             className="w-full bg-gradient-to-r from-[#238636] to-[#2ea043] hover:from-[#2ea043] hover:to-[#3ab654] text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-[#238636]/15"
           >
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? t('login.submitting') : t('login.submit')}
           </button>
         </form>
 
         <p className="text-center text-sm text-[#8b949e] mt-7">
-          New to VimSkillHub?{' '}
+          {t('login.no_account')}{' '}
           <Link to="/register" className="text-[#58a6ff] hover:text-[#79c0ff] font-medium transition-colors">
-            Create an account
+            {t('login.create')}
           </Link>
         </p>
       </div>

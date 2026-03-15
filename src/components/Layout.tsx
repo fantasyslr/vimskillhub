@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useLang } from '../context/LangContext'
 import { Menu, X, Sparkles, Search, Upload, User } from 'lucide-react'
 
 export default function Layout() {
   const { user, profile, signOut } = useAuth()
+  const { lang, setLang, t } = useLang()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
 
@@ -43,7 +45,7 @@ export default function Layout() {
                 }`}
               >
                 <Search className="w-4 h-4" />
-                Explore
+                {t('nav.explore')}
               </Link>
               <Link
                 to="/upload"
@@ -54,12 +56,18 @@ export default function Layout() {
                 }`}
               >
                 <Upload className="w-4 h-4" />
-                Upload
+                {t('nav.upload')}
               </Link>
             </nav>
 
             {/* Desktop User Menu */}
             <div className="hidden md:flex items-center gap-3">
+              <button
+                onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}
+                className="text-xs font-medium px-2.5 py-1 rounded-lg border border-[#30363d] text-[#8b949e] hover:text-[#e6edf3] hover:border-[#8b949e] transition-all"
+              >
+                {lang === 'en' ? '中文' : 'EN'}
+              </button>
               {user ? (
                 <>
                   <Link
@@ -75,7 +83,7 @@ export default function Layout() {
                     onClick={handleSignOut}
                     className="text-sm text-[#8b949e] hover:text-[#e6edf3] border border-[#30363d] rounded-lg px-3 py-1.5 hover:border-[#8b949e] transition-all hover:bg-[#30363d]/20"
                   >
-                    Sign out
+                    {t('nav.signout')}
                   </button>
                 </>
               ) : (
@@ -84,13 +92,13 @@ export default function Layout() {
                     to="/login"
                     className="text-sm text-[#8b949e] hover:text-[#e6edf3] transition-colors px-3 py-1.5"
                   >
-                    Login
+                    {t('nav.login')}
                   </Link>
                   <Link
                     to="/register"
                     className="text-sm bg-gradient-to-r from-[#238636] to-[#2ea043] hover:from-[#2ea043] hover:to-[#3ab654] text-white rounded-lg px-4 py-1.5 transition-all font-medium shadow-sm shadow-[#238636]/10"
                   >
-                    Register
+                    {t('nav.register')}
                   </Link>
                 </>
               )}
@@ -116,7 +124,7 @@ export default function Layout() {
                 className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[#8b949e] hover:text-[#e6edf3] hover:bg-[#30363d]/30 text-sm font-medium transition-colors"
               >
                 <Search className="w-4 h-4" />
-                Explore
+                {t('nav.explore')}
               </Link>
               <Link
                 to="/upload"
@@ -124,8 +132,14 @@ export default function Layout() {
                 className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[#8b949e] hover:text-[#e6edf3] hover:bg-[#30363d]/30 text-sm font-medium transition-colors"
               >
                 <Upload className="w-4 h-4" />
-                Upload
+                {t('nav.upload')}
               </Link>
+              <button
+                onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}
+                className="text-xs font-medium px-2.5 py-1 rounded-lg border border-[#30363d] text-[#8b949e] hover:text-[#e6edf3] hover:border-[#8b949e] transition-all"
+              >
+                {lang === 'en' ? '中文' : 'EN'}
+              </button>
               <div className="border-t border-[#30363d]/50 pt-3 mt-3">
                 {user ? (
                   <>
@@ -144,7 +158,7 @@ export default function Layout() {
                       }}
                       className="w-full text-left px-3 py-2.5 rounded-lg text-[#8b949e] hover:text-[#e6edf3] hover:bg-[#30363d]/30 text-sm transition-colors"
                     >
-                      Sign out
+                      {t('nav.signout')}
                     </button>
                   </>
                 ) : (
@@ -154,14 +168,14 @@ export default function Layout() {
                       onClick={() => setMobileMenuOpen(false)}
                       className="text-sm text-[#8b949e] hover:text-[#e6edf3] py-2"
                     >
-                      Login
+                      {t('nav.login')}
                     </Link>
                     <Link
                       to="/register"
                       onClick={() => setMobileMenuOpen(false)}
                       className="text-sm text-[#238636] hover:text-[#2ea043] font-medium py-2"
                     >
-                      Register
+                      {t('nav.register')}
                     </Link>
                   </div>
                 )}
@@ -187,7 +201,7 @@ export default function Layout() {
               VimSkillHub
             </div>
             <p className="text-xs text-[#484f58]">
-              Vim Technology & Eazillion Internal Platform
+              {t('nav.footer')}
             </p>
           </div>
         </div>

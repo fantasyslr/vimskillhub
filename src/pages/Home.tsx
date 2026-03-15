@@ -4,8 +4,10 @@ import { ArrowRight, Code2, Users, Download, Sparkles, Zap, Share2 } from 'lucid
 import { supabase } from '../lib/supabase'
 import type { Skill } from '../lib/types'
 import SkillCard from '../components/SkillCard'
+import { useLang } from '../context/LangContext'
 
 export default function Home() {
+  const { t } = useLang()
   const [featuredSkills, setFeaturedSkills] = useState<Skill[]>([])
   const [stats, setStats] = useState({ skills: 0, users: 0, downloads: 0 })
   const [loading, setLoading] = useState(true)
@@ -69,7 +71,7 @@ export default function Home() {
             VimSkillHub
           </h1>
           <p className="text-lg sm:text-xl text-[#8b949e] max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up" style={{ animationDelay: '150ms' }}>
-            Discover, share, and collaborate on skills across the team.
+            {t('home.subtitle')}
             <br className="hidden sm:block" />
             <span className="text-[#58a6ff]">Vim Technology</span> & <span className="text-[#58a6ff]">Eazillion</span> internal platform.
           </p>
@@ -79,14 +81,14 @@ export default function Home() {
               to="/explore"
               className="inline-flex items-center gap-2 bg-gradient-to-r from-[#238636] to-[#2ea043] hover:from-[#2ea043] hover:to-[#3ab654] text-white font-semibold px-8 py-3.5 rounded-xl text-base transition-all shadow-lg shadow-[#238636]/20 hover:shadow-[#238636]/30 hover:-translate-y-0.5"
             >
-              Explore Skills
+              {t('home.explore')}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/upload"
               className="inline-flex items-center gap-2 bg-[#161b22] border border-[#30363d] hover:border-[#58a6ff] text-[#e6edf3] font-semibold px-8 py-3.5 rounded-xl text-base transition-all hover:-translate-y-0.5"
             >
-              Share a Skill
+              {t('home.share')}
               <Share2 className="w-4 h-4" />
             </Link>
           </div>
@@ -99,9 +101,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 relative">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {[
-              { icon: Code2, value: stats.skills, label: 'Skills Shared', color: 'from-[#238636] to-[#2ea043]' },
-              { icon: Users, value: stats.users, label: 'Team Members', color: 'from-[#58a6ff] to-[#388bfd]' },
-              { icon: Download, value: stats.downloads, label: 'Total Downloads', color: 'from-[#a371f7] to-[#8957e5]' },
+              { icon: Code2, value: stats.skills, label: t('home.skills_shared'), color: 'from-[#238636] to-[#2ea043]' },
+              { icon: Users, value: stats.users, label: t('home.team_members'), color: 'from-[#58a6ff] to-[#388bfd]' },
+              { icon: Download, value: stats.downloads, label: t('home.total_downloads'), color: 'from-[#a371f7] to-[#8957e5]' },
             ].map((stat, i) => (
               <div key={i} className="text-center group">
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br opacity-90 group-hover:opacity-100 transition-opacity mb-3" style={{ backgroundImage: `linear-gradient(to bottom right, ${stat.color.split(' ')[0].replace('from-[', '').replace(']', '')}, ${stat.color.split(' ')[1].replace('to-[', '').replace(']', '')})` }}>
@@ -122,14 +124,14 @@ export default function Home() {
       {/* Why Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-14">
-          <h2 className="text-3xl font-bold text-[#e6edf3] mb-3">How it works</h2>
-          <p className="text-[#8b949e] max-w-xl mx-auto">Three steps to share knowledge across the team</p>
+          <h2 className="text-3xl font-bold text-[#e6edf3] mb-3">{t('home.how_it_works')}</h2>
+          <p className="text-[#8b949e] max-w-xl mx-auto">{t('home.how_subtitle')}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { icon: Share2, title: 'Upload', desc: 'Package your skill and share it with the team via file upload or GitHub link.', step: '01' },
-            { icon: Sparkles, title: 'Discover', desc: 'Browse, search, and filter skills by category. Star and rate the ones you love.', step: '02' },
-            { icon: Zap, title: 'Use', desc: 'One-click download. Read docs, check ratings and comments before you start.', step: '03' },
+            { icon: Share2, title: t('home.step1_title'), desc: t('home.step1_desc'), step: '01' },
+            { icon: Sparkles, title: t('home.step2_title'), desc: t('home.step2_desc'), step: '02' },
+            { icon: Zap, title: t('home.step3_title'), desc: t('home.step3_desc'), step: '03' },
           ].map((item, i) => (
             <div
               key={i}
@@ -152,14 +154,14 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-[#e6edf3]">Featured Skills</h2>
-            <p className="text-sm text-[#8b949e] mt-1">Most starred skills from the team</p>
+            <h2 className="text-2xl font-bold text-[#e6edf3]">{t('home.featured')}</h2>
+            <p className="text-sm text-[#8b949e] mt-1">{t('home.featured_sub')}</p>
           </div>
           <Link
             to="/explore"
             className="text-sm text-[#58a6ff] hover:text-[#79c0ff] flex items-center gap-1 transition-colors"
           >
-            View all
+            {t('home.view_all')}
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -176,12 +178,12 @@ export default function Home() {
         ) : featuredSkills.length === 0 ? (
           <div className="text-center py-16 bg-[#161b22] border border-[#30363d] rounded-2xl">
             <Sparkles className="w-10 h-10 text-[#30363d] mx-auto mb-4" />
-            <p className="text-[#8b949e] mb-3">No skills published yet</p>
+            <p className="text-[#8b949e] mb-3">{t('home.no_skills')}</p>
             <Link
               to="/upload"
               className="inline-flex items-center gap-2 text-sm text-[#58a6ff] hover:text-[#79c0ff] transition-colors"
             >
-              Be the first to share
+              {t('home.be_first')}
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

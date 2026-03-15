@@ -15,12 +15,13 @@ import { format } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
-import { CATEGORIES } from '../lib/types'
+import { useLang } from '../context/LangContext'
 import type { Skill, Comment } from '../lib/types'
 
 export default function SkillDetail() {
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
+  const { t } = useLang()
 
   const [skill, setSkill] = useState<Skill | null>(null)
   const [loading, setLoading] = useState(true)
@@ -233,16 +234,13 @@ export default function SkillDetail() {
   if (!skill) {
     return (
       <div className="text-center py-32">
-        <p className="text-[#8b949e]">Skill not found.</p>
+        <p className="text-[#8b949e]">{t('skill.not_found')}</p>
         <Link to="/explore" className="text-[#58a6ff] hover:underline text-sm mt-2 inline-block">
-          Back to Explore
+          {t('skill.back')}
         </Link>
       </div>
     )
   }
-
-  const categoryLabel =
-    CATEGORIES.find((c) => c.value === skill.category)?.label ?? skill.category
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -256,7 +254,7 @@ export default function SkillDetail() {
                 {skill.title}
               </h1>
               <span className="text-xs border border-[#30363d] text-[#8b949e] rounded-full px-2.5 py-0.5">
-                {categoryLabel}
+                {t('cat.' + skill.category)}
               </span>
               <span className="text-xs text-[#8b949e]">v{skill.version}</span>
             </div>
@@ -292,7 +290,7 @@ export default function SkillDetail() {
                   className="inline-flex items-center gap-2 bg-[#238636] hover:bg-[#2ea043] text-white text-sm font-medium px-4 py-2 rounded-md transition-colors"
                 >
                   <Download className="w-4 h-4" />
-                  {skill.file_url ? `Download ${skill.file_name ?? 'File'}` : 'Get from GitHub'}
+                  {skill.file_url ? t('skill.download_file') : t('skill.get_github')}
                 </button>
               )}
               {skill.github_url && (
@@ -303,7 +301,7 @@ export default function SkillDetail() {
                   className="inline-flex items-center gap-2 bg-[#161b22] border border-[#30363d] text-[#e6edf3] hover:border-[#8b949e] text-sm font-medium px-4 py-2 rounded-md transition-colors"
                 >
                   <Github className="w-4 h-4" />
-                  View on GitHub
+                  {t('skill.view_github')}
                 </a>
               )}
               {user && (
@@ -319,7 +317,7 @@ export default function SkillDetail() {
                   <Star
                     className={`w-4 h-4 ${starred ? 'fill-[#58a6ff]' : ''}`}
                   />
-                  {starred ? 'Starred' : 'Star'}
+                  {starred ? t('skill.starred') : t('skill.star')}
                   <span className="text-[#8b949e]">{starCount}</span>
                 </button>
               )}
@@ -330,7 +328,7 @@ export default function SkillDetail() {
           {skill.long_description && (
             <div className="bg-[#161b22] border border-[#30363d] rounded-md p-5 mb-6">
               <h2 className="text-lg font-semibold text-[#e6edf3] mb-4">
-                Documentation
+                {t('skill.documentation')}
               </h2>
               <div className="prose prose-invert prose-sm max-w-none text-[#e6edf3] prose-headings:text-[#e6edf3] prose-a:text-[#58a6ff] prose-code:text-[#e6edf3] prose-code:bg-[#0d1117] prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-[#30363d]">
                 <ReactMarkdown>{skill.long_description}</ReactMarkdown>
@@ -341,7 +339,7 @@ export default function SkillDetail() {
           {/* Tags */}
           {skill.tags.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-medium text-[#e6edf3] mb-2">Tags</h3>
+              <h3 className="text-sm font-medium text-[#e6edf3] mb-2">{t('skill.tags')}</h3>
               <div className="flex flex-wrap gap-2">
                 {skill.tags.map((tag) => (
                   <span
@@ -359,7 +357,7 @@ export default function SkillDetail() {
           {/* Rating */}
           <div className="bg-[#161b22] border border-[#30363d] rounded-md p-5 mb-6">
             <h2 className="text-lg font-semibold text-[#e6edf3] mb-3">
-              Rating
+              {t('skill.rating')}
             </h2>
             <div className="flex items-center gap-4 mb-3">
               <span className="text-2xl font-bold text-[#e6edf3]">
@@ -378,12 +376,12 @@ export default function SkillDetail() {
                 ))}
               </div>
               <span className="text-sm text-[#8b949e]">
-                ({ratingCount} {ratingCount === 1 ? 'rating' : 'ratings'})
+                ({ratingCount} {ratingCount === 1 ? t('skill.rating_singular') : t('skill.ratings')})
               </span>
             </div>
             {user ? (
               <div>
-                <p className="text-sm text-[#8b949e] mb-2">Your rating:</p>
+                <p className="text-sm text-[#8b949e] mb-2">{t('skill.your_rating')}</p>
                 <div className="flex items-center gap-1">
                   {Array.from({ length: 5 }, (_, i) => {
                     const score = i + 1
@@ -409,10 +407,7 @@ export default function SkillDetail() {
               </div>
             ) : (
               <p className="text-sm text-[#8b949e]">
-                <Link to="/login" className="text-[#58a6ff] hover:underline">
-                  Sign in
-                </Link>{' '}
-                to rate this skill.
+                {t('skill.sign_in_rate')}
               </p>
             )}
           </div>
@@ -420,12 +415,12 @@ export default function SkillDetail() {
           {/* Comments */}
           <div className="bg-[#161b22] border border-[#30363d] rounded-md p-5">
             <h2 className="text-lg font-semibold text-[#e6edf3] mb-4">
-              Comments ({comments.length})
+              {t('skill.comments')} ({comments.length})
             </h2>
 
             {comments.length === 0 && (
               <p className="text-sm text-[#8b949e] mb-4">
-                No comments yet. Be the first to share your thoughts.
+                {t('skill.no_comments')}
               </p>
             )}
 
@@ -466,7 +461,7 @@ export default function SkillDetail() {
                   type="text"
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Add a comment..."
+                  placeholder={t('skill.add_comment')}
                   className="flex-1 bg-[#0d1117] border border-[#30363d] rounded-md py-2 px-3 text-sm text-[#e6edf3] placeholder-[#484f58] focus:outline-none focus:border-[#238636] focus:ring-1 focus:ring-[#238636]"
                 />
                 <button
@@ -475,15 +470,12 @@ export default function SkillDetail() {
                   className="inline-flex items-center gap-1.5 bg-[#238636] hover:bg-[#2ea043] text-white text-sm font-medium px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-4 h-4" />
-                  Send
+                  {t('skill.send')}
                 </button>
               </form>
             ) : (
               <p className="text-sm text-[#8b949e]">
-                <Link to="/login" className="text-[#58a6ff] hover:underline">
-                  Sign in
-                </Link>{' '}
-                to leave a comment.
+                {t('skill.sign_in_comment')}
               </p>
             )}
           </div>
@@ -494,31 +486,31 @@ export default function SkillDetail() {
           {/* Stats Card */}
           <div className="bg-[#161b22] border border-[#30363d] rounded-md p-4">
             <h3 className="text-sm font-semibold text-[#e6edf3] mb-3">
-              Stats
+              {t('skill.stats')}
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-[#8b949e] flex items-center gap-1.5">
-                  <Star className="w-4 h-4" /> Stars
+                  <Star className="w-4 h-4" /> {t('skill.stars')}
                 </span>
                 <span className="text-[#e6edf3]">{starCount}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[#8b949e] flex items-center gap-1.5">
-                  <Download className="w-4 h-4" /> Downloads
+                  <Download className="w-4 h-4" /> {t('skill.downloads')}
                 </span>
                 <span className="text-[#e6edf3]">
                   {skill.downloads_count}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[#8b949e]">Rating</span>
+                <span className="text-[#8b949e]">{t('skill.rating')}</span>
                 <span className="text-[#e6edf3] flex items-center gap-1">
                   {'★'} {avgRating > 0 ? avgRating.toFixed(1) : '-'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[#8b949e]">Version</span>
+                <span className="text-[#8b949e]">{t('skill.version')}</span>
                 <span className="text-[#e6edf3]">{skill.version}</span>
               </div>
             </div>
@@ -531,7 +523,7 @@ export default function SkillDetail() {
               className="block bg-[#161b22] border border-[#30363d] rounded-md p-4 hover:border-[#8b949e] transition-colors"
             >
               <h3 className="text-sm font-semibold text-[#e6edf3] mb-3">
-                Author
+                {t('skill.author')}
               </h3>
               <div className="flex items-center gap-3">
                 {skill.author.avatar_url ? (

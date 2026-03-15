@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { UserPlus, Mail, Lock, User, AlertCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { ALLOWED_DOMAINS } from '../lib/supabase'
+import { useLang } from '../context/LangContext'
 
 export default function Register() {
+  const { t } = useLang()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
@@ -24,7 +26,7 @@ export default function Register() {
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters.')
+      setError(t('register.password_short'))
       return
     }
 
@@ -45,9 +47,9 @@ export default function Register() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <UserPlus className="w-12 h-12 text-[#238636] mx-auto mb-4" />
-          <h1 className="text-2xl font-semibold text-[#e6edf3]">Create your account</h1>
+          <h1 className="text-2xl font-semibold text-[#e6edf3]">{t('register.title')}</h1>
           <p className="text-[#8b949e] mt-2 text-sm">
-            Join VimSkillHub with your company email
+            {t('register.subtitle')}
           </p>
         </div>
 
@@ -64,7 +66,7 @@ export default function Register() {
 
           <div>
             <label htmlFor="displayName" className="block text-sm font-medium text-[#e6edf3] mb-1.5">
-              Display name
+              {t('register.name')}
             </label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8b949e]" />
@@ -82,7 +84,7 @@ export default function Register() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-[#e6edf3] mb-1.5">
-              Company email
+              {t('register.email')}
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8b949e]" />
@@ -97,13 +99,13 @@ export default function Register() {
               />
             </div>
             <p className="text-xs text-[#8b949e] mt-1">
-              Only @eazillion.com and @vim-technology.com emails are accepted.
+              {t('register.email_hint')}
             </p>
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-[#e6edf3] mb-1.5">
-              Password
+              {t('register.password')}
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8b949e]" />
@@ -114,7 +116,7 @@ export default function Register() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
+                placeholder={t('register.password_hint')}
                 className="w-full bg-[#0d1117] border border-[#30363d] rounded-md py-2 pl-10 pr-3 text-[#e6edf3] placeholder-[#484f58] text-sm focus:outline-none focus:border-[#238636] focus:ring-1 focus:ring-[#238636]"
               />
             </div>
@@ -125,14 +127,14 @@ export default function Register() {
             disabled={loading}
             className="w-full bg-[#238636] hover:bg-[#2ea043] text-white font-medium py-2 px-4 rounded-md text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Creating account...' : 'Create account'}
+            {loading ? t('register.submitting') : t('register.submit')}
           </button>
         </form>
 
         <p className="text-center text-sm text-[#8b949e] mt-6">
-          Already have an account?{' '}
+          {t('register.has_account')}{' '}
           <Link to="/login" className="text-[#58a6ff] hover:underline">
-            Sign in
+            {t('register.sign_in')}
           </Link>
         </p>
       </div>

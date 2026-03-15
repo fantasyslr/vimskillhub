@@ -13,12 +13,14 @@ import {
 import { format } from 'date-fns'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
+import { useLang } from '../context/LangContext'
 import type { Profile as ProfileType, Skill } from '../lib/types'
 import SkillCard from '../components/SkillCard'
 
 export default function Profile() {
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
+  const { t } = useLang()
 
   const isOwnProfile = !id || id === user?.id
 
@@ -88,7 +90,7 @@ export default function Profile() {
     setSaveError('')
 
     if (!displayName.trim()) {
-      setSaveError('Display name is required.')
+      setSaveError(t('profile.name_required'))
       return
     }
 
@@ -137,7 +139,7 @@ export default function Profile() {
   if (!profile) {
     return (
       <div className="text-center py-32">
-        <p className="text-[#8b949e]">Profile not found.</p>
+        <p className="text-[#8b949e]">{t('profile.not_found')}</p>
       </div>
     )
   }
@@ -190,21 +192,21 @@ export default function Profile() {
                 <p className="text-sm font-semibold text-[#e6edf3]">
                   {skills.length}
                 </p>
-                <p className="text-xs text-[#8b949e]">Skills</p>
+                <p className="text-xs text-[#8b949e]">{t('profile.skills')}</p>
               </div>
               <div className="text-center">
                 <Star className="w-4 h-4 text-[#8b949e] mx-auto mb-1" />
                 <p className="text-sm font-semibold text-[#e6edf3]">
                   {totalStars}
                 </p>
-                <p className="text-xs text-[#8b949e]">Stars</p>
+                <p className="text-xs text-[#8b949e]">{t('skill.stars')}</p>
               </div>
               <div className="text-center">
                 <Download className="w-4 h-4 text-[#8b949e] mx-auto mb-1" />
                 <p className="text-sm font-semibold text-[#e6edf3]">
                   {totalDownloads}
                 </p>
-                <p className="text-xs text-[#8b949e]">Downloads</p>
+                <p className="text-xs text-[#8b949e]">{t('skill.downloads')}</p>
               </div>
             </div>
 
@@ -214,7 +216,7 @@ export default function Profile() {
                 onClick={() => setEditing(true)}
                 className="w-full mt-5 bg-[#161b22] border border-[#30363d] text-[#e6edf3] hover:border-[#8b949e] rounded-md px-4 py-2 text-sm font-medium transition-colors"
               >
-                Edit Profile
+                {t('profile.edit')}
               </button>
             )}
           </div>
@@ -226,7 +228,7 @@ export default function Profile() {
               className="bg-[#161b22] border border-[#30363d] rounded-md p-5 mt-4 space-y-4"
             >
               <h3 className="text-sm font-semibold text-[#e6edf3]">
-                Edit Profile
+                {t('profile.edit')}
               </h3>
 
               {saveError && (
@@ -238,7 +240,7 @@ export default function Profile() {
 
               <div>
                 <label className="block text-xs font-medium text-[#8b949e] mb-1">
-                  Display Name
+                  {t('profile.name_label')}
                 </label>
                 <input
                   type="text"
@@ -250,7 +252,7 @@ export default function Profile() {
 
               <div>
                 <label className="block text-xs font-medium text-[#8b949e] mb-1">
-                  Bio
+                  {t('profile.bio_label')}
                 </label>
                 <textarea
                   value={bio}
@@ -262,7 +264,7 @@ export default function Profile() {
 
               <div>
                 <label className="block text-xs font-medium text-[#8b949e] mb-1">
-                  Avatar URL
+                  {t('profile.avatar_label')}
                 </label>
                 <input
                   type="url"
@@ -284,7 +286,7 @@ export default function Profile() {
                   ) : (
                     <Save className="w-4 h-4" />
                   )}
-                  Save
+                  {t('profile.save')}
                 </button>
                 <button
                   type="button"
@@ -297,7 +299,7 @@ export default function Profile() {
                   }}
                   className="px-4 py-2 border border-[#30363d] text-[#8b949e] hover:text-[#e6edf3] hover:border-[#8b949e] rounded-md text-sm transition-colors"
                 >
-                  Cancel
+                  {t('profile.cancel')}
                 </button>
               </div>
             </form>
@@ -307,15 +309,15 @@ export default function Profile() {
         {/* Main Content */}
         <div className="flex-1 min-w-0">
           <h2 className="text-lg font-semibold text-[#e6edf3] mb-4">
-            {isOwnProfile ? 'My Skills' : `${profile.display_name}'s Skills`}
+            {isOwnProfile ? t('profile.my_skills') : profile.display_name + t('profile.user_skills')}
           </h2>
 
           {skills.length === 0 ? (
             <div className="bg-[#161b22] border border-[#30363d] rounded-md p-8 text-center">
               <p className="text-[#8b949e]">
                 {isOwnProfile
-                  ? 'You haven\'t published any skills yet.'
-                  : 'This user hasn\'t published any skills yet.'}
+                  ? t('profile.no_skills_own')
+                  : t('profile.no_skills_other')}
               </p>
             </div>
           ) : (
