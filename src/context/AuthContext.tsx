@@ -64,19 +64,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       )
     }
 
+    // Step 1: Create auth user
     const { data, error } = await supabase.auth.signUp({ email, password })
-    if (error) throw error
+    if (error) throw new Error(`Sign up failed: ${error.message}`)
+    if (!data.user) throw new Error('Sign up failed: no user returned')
 
-    if (data.user) {
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: data.user.id,
-        email,
-        display_name: displayName,
-        avatar_url: null,
-        bio: null,
-      })
-      if (profileError) throw profileError
+    // Step 2: If we got a session, the client will use it automatically.
+    // If not (email confirmation still on), sign in explicitly.
+    if (!data.session) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+      if (signInError) throw new Error(`Auto sign-in failed: ${signInError.message}`)
     }
+
+    // Step 3: Create profile
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: data.user.id,
+      email,
+      display_name: displayName,
+      avatar_url: null,
+      bio: null,
+    })
+    if (profileError) throw new Error(`Profile creation failed: ${profileError.message}`)
   }
 
   async function signOut() {
